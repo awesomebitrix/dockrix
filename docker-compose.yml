@@ -20,7 +20,7 @@ services:
 
     nginx:
         build: 
-            context: $DOCKDIR/nginx
+            context: $DOCKRIXDIR/nginx
             dockerfile: nginx-$NGINX_VERSION.dock
         volumes_from:
             - source
@@ -39,7 +39,7 @@ services:
 
     php-fpm:
         build:
-            context: $DOCKDIR/php-fpm
+            context: $DOCKRIXDIR/php-fpm
             dockerfile: php-fpm-$PHP_VERSION.dock
         volumes_from:
             - source
@@ -60,7 +60,7 @@ services:
 
     mysql:
         build: 
-            context: $DOCKDIR/mysql
+            context: $DOCKRIXDIR/mysql
             dockerfile: mysql-$PHP_VERSION.dock
         volumes_from:
             - data
@@ -79,7 +79,7 @@ services:
 
     memcached:
         build: 
-            context: $DOCKDIR/memcached
+            context: $DOCKRIXDIR/memcached
             dockerfile: memcached-$MEMCACHED_VERSION.dock
         volumes_from:
             - data
@@ -95,7 +95,7 @@ services:
 
     # workspace:
     #     build:
-    #         context: $DOCKDIR/workspace
+    #         context: $DOCKRIXDIR/workspace
     #     ports:
     #         - "$WORKSPACE_PORTS"
     #     volumes_from:
@@ -108,17 +108,17 @@ services:
 ### Application Code Container
 
     source:
-        build: $DOCKDIR/volumes/source
+        build: $DOCKRIXDIR/volumes/source
         volumes:
             - $PROJECT_PATH:/var/www/site
 
 ### Databases Data Container
 
     data:
-        build: $DOCKDIR/volumes/data
+        build: $DOCKRIXDIR/volumes/data
         volumes:
-            - $DOCKDIR/var/lib/mysql:/var/lib/mysql
-            - $DOCKDIR/var/lib/memcached:/var/lib/memcached
-            - $DOCKDIR/var/log/nginx:/var/log/nginx
-            - $DOCKDIR/var/log/php:/var/log/php
+            - $DOCKRIXDIR/var/lib/mysql:/var/lib/mysql
+            - $DOCKRIXDIR/var/lib/memcached:/var/lib/memcached
+            - $DOCKRIXDIR/var/log/nginx:/var/log/nginx
+            - $DOCKRIXDIR/var/log/php:/var/log/php
 
