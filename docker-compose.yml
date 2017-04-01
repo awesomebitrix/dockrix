@@ -1,0 +1,124 @@
+version: '2'
+
+### Network
+
+networks:
+    default:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+              - subnet: $SUBNET
+                gateway: $GATEWAY
+
+
+### Services
+
+services:
+
+### Nginx Server Container ##################################
+
+    nginx:
+        build: 
+            context: $DOCKDIR/nginx
+            dockerfile: nginx-$NGINX_VERSION.dock
+        volumes_from:
+            - source
+            - data
+        ports:
+            - "$NGINX_PORTS"
+        links:
+            - php-fpm
+        networks:
+            default:
+                ipv4_address: $NGINX_IP
+                aliases: 
+                    - $PROJECT_DOMAIN
+
+### PHP-FPM Container #######################################
+
+    php-fpm:
+        build:
+            context: $DOCKDIR/php-fpm
+            dockerfile: php-fpm-$PHP_VERSION.dock
+        volumes_from:
+            - source
+        expose:
+            - "9000"
+        # links:
+        #     - workspace
+        environment:
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            MYSQL_HOST: $MYSQL_IP
+        networks:
+            default:
+                ipv4_address: $PHP_IP
+
+## MySQL Container
+
+    mysql:
+        build: 
+            context: $DOCKDIR/mysql
+            dockerfile: mysql-$PHP_VERSION.dock
+        volumes_from:
+            - data
+        ports:
+            - "$MYSQL_PORTS"
+        environment:
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+        networks:
+            default:
+                ipv4_address: $MYSQL_IP
+
+### Memcached Container
+
+    memcached:
+        build: 
+            context: $DOCKDIR/memcached
+            dockerfile: memcached-$MEMCACHED_VERSION.dock
+        volumes_from:
+            - data
+        ports:
+            - "$MEMCACHED_PORTS"
+        links:
+            - php-fpm
+        networks:
+            default:
+                ipv4_address: $MEMCACHED_IP
+
+### Workspace Utilities Container
+
+    # workspace:
+    #     build:
+    #         context: $DOCKDIR/workspace
+    #     ports:
+    #         - "$WORKSPACE_PORTS"
+    #     volumes_from:
+    #         - source
+    #     tty: true
+    #     networks:
+    #         default:
+    #             ipv4_address: $WORKSPACE_IP
+
+### Application Code Container
+
+    source:
+        build: $DOCKDIR/volumes/source
+        volumes:
+            - $PROJECT_PATH:/var/www/site
+
+### Databases Data Container
+
+    data:
+        build: $DOCKDIR/volumes/data
+        volumes:
+            - $DOCKDIR/var/lib/mysql:/var/lib/mysql
+            - $DOCKDIR/var/lib/memcached:/var/lib/memcached
+            - $DOCKDIR/var/log/nginx:/var/log/nginx
+            - $DOCKDIR/var/log/php:/var/log/php
+

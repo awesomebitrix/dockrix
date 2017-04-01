@@ -1,0 +1,16 @@
+# based on debian:jessie
+FROM nginx:latest
+
+MAINTAINER Igor Barkowsky <igor.barkowsky@gmail.com>
+
+ADD nginx.conf /etc/nginx/
+ADD bx.conf /etc/nginx/sites-available/
+
+RUN echo "upstream php-upstream { server php-fpm:9000; }" > /etc/nginx/conf.d/upstream.conf
+
+RUN usermod -u 1000 www-data
+RUN ulimit -s unlimited
+
+CMD ["nginx"]
+
+EXPOSE 80 443

@@ -1,0 +1,7 @@
+FROM memcached:latest
+
+MAINTAINER Igor Barkowsky <igor.barkowsky@gmail.com>
+
+CMD ["memcached"]
+
+EXPOSE 11211
