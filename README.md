@@ -27,7 +27,7 @@ MEMCACHED_IP=172.172.172.5
 # Services versions
 # Тут нужно указывать версии требуемого ПО в контейнерах.
 # ВАЖНО: для указанной версии должен существовать соответствующий dockerfile. Если вам нужна какая-то версия, которая еще не включена в репозитории - можете сделать докерфайл по аналогии или взять его с registry.docker.com
-# Например, докерфайл для nginx хранится в DOCKDIR/nginx/nginx-$NGINX_VERSION.dock
+# Например, докерфайл для nginx хранится в $DOCKRIXDIR/nginx/nginx-$NGINX_VERSION.dock
 NGINX_VERSION=latest
 PHP_VERSION=5.6
 MYSQL_VERSION=5.6
