@@ -37,7 +37,7 @@ RUN docker-php-ext-install \
     gd
 
 # Install xdebug
-RUN pecl install xdebug \
+RUN pecl install xdebug-2.5.5 \
     && docker-php-ext-enable xdebug
 
 # Add bin folder of composer to PATH.
